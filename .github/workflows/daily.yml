@@ -1,0 +1,30 @@
+name: Mensa Menu Bot
+
+on:
+  schedule:
+    # 12:00 Europe/Vienna (winter = UTC+1 → 11:00 UTC)
+    # In summer (UTC+2) change to 10:00 UTC
+    - cron: "0 11 * * 1-5"
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run script
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: |
+          BOT_TOKEN=$BOT_TOKEN CHAT_ID=$CHAT_ID python bot.py
